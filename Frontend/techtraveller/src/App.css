@@ -1,0 +1,148 @@
+
+
+.hero {
+    background-image: url('https://source.unsplash.com/1600x900/?travel');
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    text-align: center;
+    padding: 100px 20px;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 102, 204, 0.6);
+    z-index: -1;
+}
+
+.hero h2 {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+.btn {
+    display: inline-block;
+    background-color: #0066cc;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1em;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: #005bb5;
+}
+
+.booking-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.booking-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    flex: 1 1 30%;
+}
+
+.booking-form h3 {
+    margin-bottom: 15px;
+    color: #0066cc;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#itinerary-results,
+#accommodation-results,
+#flight-results,
+#car-results,
+#eco-results {
+    margin-top: 20px;
+}
+
+footer {
+    background-color: #0066cc;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+/* Chat Support Styles */
+.chat-box {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    max-height: 400px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-box.hidden {
+    display: none;
+}
+
+#chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+#chat-messages .message {
+    margin-bottom: 10px;
+}
+
+#chat-messages .message.user {
+    text-align: right;
+}
+
+#chat-input {
+    border: none;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    width: 100%;
+    outline: none;
+}
+
+#chat-input::placeholder {
+    color: #aaa;
+}

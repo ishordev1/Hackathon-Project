@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { toast } from 'react-toastify';
+import { TouristsignUp } from '../../service/Login-Service';
 
 const TouristSignup = () => {
   const [loginDetails, setLoginDetails] = useState({
@@ -15,40 +16,40 @@ const TouristSignup = () => {
   const handleChange = (event, property) => {
     setLoginDetails({ ...loginDetails, [property]: event.target.value });
   };
-
   const navigate = useNavigate();
+
+
 
   const submitForm = (event) => {
     event.preventDefault();
-
-    // Prepare the JSON data to match the structure expected by your endpoint
     const data = {
       user: {
         email: loginDetails.email,
         password: loginDetails.password,
+        role:"TOURIST"
       },
       name: loginDetails.name,
       email: loginDetails.email,
       phoneNumber: loginDetails.phone,
-      gender: loginDetails.gender,  // Correctly sending gender
+      gender: loginDetails.gender,  
       address: loginDetails.address,
-      nationality: "Canadian" // Set this value dynamically if needed
+      nationality: "Canadian" 
     };
-
-    // Send POST request to the endpoint
-    axios.post('http://localhost:8080/auth/touristsignup', data)
-      .then((response) => {
-        console.log(response.data);
-        alert("Successfully registered user: " + response.data.name);
-        navigate('/signin'); // Redirect after successful registration
-      })
+    
+    TouristsignUp(data).then((res) => {
+      console.log(res)
+      navigate('/signin');
+      toast.success("Successfully register user. !! user id:" )
+  })
       .catch((error) => {
-        console.error("There was an error!", error);
-        alert("Failed to register user. Please try again.");
-      });
+          toast.error("User data are invalid..")
+          console.log(error)
+      })
   };
 
+
   return (
+   
     <div className="container">
       {JSON.stringify(loginDetails)}
       <div className="row justify-content-center">

@@ -15,10 +15,11 @@ export const isLoggedIn = () => {
 
 // doLogin=> data=> set to localStorage
 export const doLogin = (data, next) => {
-    // in local storage only string set so we convert into string and set
+    console.log(data)
     localStorage.setItem("data", JSON.stringify(data))
     next()
 };
+
 
 // doLogout
 export const doLogout = (next) => {
@@ -36,10 +37,26 @@ export const getCurrentUserDetails = () => {
     else return undefined;
 };
 
-//check admin
-export const isAdminUser = () => {
+// //check tourist
+export const isTourist = () => {
     if (isLoggedIn()) {
+        const tokenData = JSON.parse(localStorage.getItem('data'))
+        const role = tokenData.user.role;
+        if (role === "TOURIST") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
 
+//check admin
+export const isAdmin = () => {
+    if (isLoggedIn()) {
         const tokenData = JSON.parse(localStorage.getItem('data'))
         const role = tokenData.user.role;
         if (role === "ADMIN") {
@@ -53,17 +70,47 @@ export const isAdminUser = () => {
         return false;
     }
 }
-
-//check normal
-export const isNormalUser = () => {
+//check homeProvider
+export const isHomeProvider = () => {
     if (isLoggedIn()) {
         const tokenData = JSON.parse(localStorage.getItem('data'))
         const role = tokenData.user.role;
-        if (role === "NORMAL") {
+        if (role === "HOMEPROVIDER") {
             return true;
         }
         else {
-        
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
+//check vachileProvider
+export const isVehiCleProvider = () => {
+    if (isLoggedIn()) {
+        const tokenData = JSON.parse(localStorage.getItem('data'))
+        const role = tokenData.user.role;
+        if (role === "VEHICLEPROVIDER") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
+//check tourguide
+export const isTourGuide = () => {
+    if (isLoggedIn()) {
+        const tokenData = JSON.parse(localStorage.getItem('data'))
+        const role = tokenData.user.role;
+        if (role === "TOURGUIDE") {
+            return true;
+        }
+        else {
             return false;
         }
     }
@@ -72,11 +119,11 @@ export const isNormalUser = () => {
     }
 }
 
-export const getToken=()=>{
-    if(isLoggedIn()){
-        return JSON.parse(localStorage.getItem('data')).jwtToken
-    }
-    else{
-        return null
+export const getToken = () => {
+    if (isLoggedIn()) {
+        const data = JSON.parse(localStorage.getItem('data'));
+        return data.token;  
+    } else {
+        return null;
     }
 }

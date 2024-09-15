@@ -27,6 +27,7 @@ public class TourGuideDto {
     private String phoneNumber;
     private String gender;
     private String address;
+    private String city;
     private String email;
     private String isApproval;
     private IdProof idProof;

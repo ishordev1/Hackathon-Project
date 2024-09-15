@@ -32,7 +32,7 @@
 //    @Override
 //    public BookTourGuideDto updateBooking(String id, BookTourGuideDto bookGuideDto) {
 //        BookTourGuide existingBookGuide = bookGuideRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Booking not found"));
+//                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 //
 //        modelMapper.map(bookGuideDto, existingBookGuide);
 //        BookTourGuide updatedBookGuide = bookGuideRepository.save(existingBookGuide);
@@ -42,7 +42,7 @@
 //    @Override
 //    public BookTourGuideDto getBookingById(String id) {
 //        BookTourGuide bookGuide = bookGuideRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Booking not found"));
+//                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 //        return modelMapper.map(bookGuide, BookTourGuideDto.class);
 //    }
 //
@@ -57,7 +57,7 @@
 //    @Override
 //    public void deleteBooking(String id) {
 //        BookTourGuide bookGuide = bookGuideRepository.findById(id)
-//                .orElseThrow(() -> new RuntimeException("Booking not found"));
+//                .orElseThrow(() -> new ResourceNotFoundException("Booking not found"));
 //        bookGuideRepository.delete(bookGuide);
 //    }
 //}

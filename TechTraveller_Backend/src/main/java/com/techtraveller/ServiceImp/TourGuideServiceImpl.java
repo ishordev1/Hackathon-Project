@@ -40,7 +40,6 @@ public class TourGuideServiceImpl implements TourGuideService {
     public TourGuideDto createTourGuide(TourGuideDto tourGuideDto) {
         // Create and save the User first
         UserDto userDto = tourGuideDto.getUser();
-       
 
         UserDto savedUserEntity = this.userService.createUser(userDto);
         

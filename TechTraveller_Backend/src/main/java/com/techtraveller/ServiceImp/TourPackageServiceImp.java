@@ -2,6 +2,7 @@ package com.techtraveller.ServiceImp;
 
 import com.techtraveller.Dto.TourPackageDto;
 import com.techtraveller.Entity.TourPackage;
+import com.techtraveller.Exception.ResourceNotFoundException;
 import com.techtraveller.Entity.TourGuide;
 import com.techtraveller.Repository.TourPackageRepository;
 import com.techtraveller.Repository.TourGuideRepository;
@@ -10,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +31,7 @@ public class TourPackageServiceImp implements TourPackageService {
     @Override
     public TourPackageDto createTourPackageByTourGuideId(String tourGuideId, TourPackageDto tourPackageDto) {
         TourGuide tourGuide = tourGuideRepository.findById(tourGuideId)
-                .orElseThrow(() -> new RuntimeException("Tour Guide not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Guide not found"));
         
         TourPackage tourPackage = modelMapper.map(tourPackageDto, TourPackage.class);
         tourPackage.setTourGuide(tourGuide);
@@ -42,13 +44,13 @@ public class TourPackageServiceImp implements TourPackageService {
     @Override
     public TourPackageDto updateTourPackageByTourGuideId(String tourGuideId, String id, TourPackageDto tourPackageDto) {
         TourGuide tourGuide = tourGuideRepository.findById(tourGuideId)
-                .orElseThrow(() -> new RuntimeException("Tour Guide not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Guide not found"));
         
         TourPackage existingTourPackage = tourPackageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tour Package not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Package not found"));
 
         if (!existingTourPackage.getTourGuide().getId().equals(tourGuideId)) {
-            throw new RuntimeException("Tour Package does not belong to the given Tour Guide");
+            throw new ResourceNotFoundException("Tour Package does not belong to the given Tour Guide");
         }
 
         modelMapper.map(tourPackageDto, existingTourPackage);
@@ -61,13 +63,13 @@ public class TourPackageServiceImp implements TourPackageService {
     @Override
     public TourPackageDto getTourPackageByIdByTourGuideId(String tourGuideId, String id) {
         TourGuide tourGuide = tourGuideRepository.findById(tourGuideId)
-                .orElseThrow(() -> new RuntimeException("Tour Guide not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Guide not found"));
 
         TourPackage tourPackage = tourPackageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tour Package not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Package not found"));
 
         if (!tourPackage.getTourGuide().getId().equals(tourGuideId)) {
-            throw new RuntimeException("Tour Package does not belong to the given Tour Guide");
+            throw new ResourceNotFoundException("Tour Package does not belong to the given Tour Guide");
         }
 
         return modelMapper.map(tourPackage, TourPackageDto.class);
@@ -83,7 +85,7 @@ public class TourPackageServiceImp implements TourPackageService {
     @Override
     public List<TourPackageDto> getAllTourPackagesByTourGuideId(String tourGuideId) {
         TourGuide tourGuide = tourGuideRepository.findById(tourGuideId)
-                .orElseThrow(() -> new RuntimeException("Tour Guide not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Guide not found"));
 
         return tourPackageRepository.findByTourGuideId(tourGuide.getId()).stream()
                 .map(tourPackage -> modelMapper.map(tourPackage, TourPackageDto.class))
@@ -93,13 +95,13 @@ public class TourPackageServiceImp implements TourPackageService {
     @Override
     public void deleteTourPackageByTourGuideId(String tourGuideId, String id) {
         TourGuide tourGuide = tourGuideRepository.findById(tourGuideId)
-                .orElseThrow(() -> new RuntimeException("Tour Guide not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Guide not found"));
 
         TourPackage tourPackage = tourPackageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tour Package not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Tour Package not found"));
 
         if (!tourPackage.getTourGuide().getId().equals(tourGuideId)) {
-            throw new RuntimeException("Tour Package does not belong to the given Tour Guide");
+            throw new ResourceNotFoundException("Tour Package does not belong to the given Tour Guide");
         }
 
         tourPackageRepository.delete(tourPackage);

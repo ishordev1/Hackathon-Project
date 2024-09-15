@@ -44,11 +44,13 @@ public class UserServiceImp implements UserService {
     	}
         User user = modelMapper.map(userDto, User.class);
         user.setPassword(this.passwordEncoder.encode(userDto.getPassword()));
-        System.out.println("Encoded passfdword:"+user.getPassword());
+//        System.out.println("Encoded passfdword:"+user.getPassword());
         user.setIsActive(false);
         user.setEmailVerify(false);
+        
         String emailToken = UUID.randomUUID().toString();
 		user.setEmailToken(emailToken);
+		System.out.println("this is user Role:"+user.getRole());
 		User savedUser = userRepository.save(user);
 
 		String html = "<div style='border: 2px solid #000; padding: 20px; width: 300px; margin: 0 auto; text-align: center;'>"
@@ -58,14 +60,14 @@ public class UserServiceImp implements UserService {
 				+ "' style='display: inline-block; margin-top: 20px; padding: 10px 20px; color: white; background-color: #007bff; text-decoration: none; border-radius: 5px;'>Verify Email</a>"
 				+ "</div>";
 
-		this.emailService.sendEmailWithHtml(user.getEmail(), "Tech Traveller Verify Link", html);
+//		this.emailService.sendEmailWithHtml(user.getEmail(), "Tech Traveller Verify Link", html);
 		
         return modelMapper.map(savedUser, UserDto.class);
     }
 
     @Override
     public UserDto getUserById(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         return modelMapper.map(user, UserDto.class);
     }
 
@@ -77,7 +79,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public UserDto updateUser(String userId, UserDto userDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setEmail(userDto.getEmail());
         
         if (userDto.getPassword() != null && !userDto.getPassword().isEmpty()) {
@@ -90,7 +92,7 @@ public class UserServiceImp implements UserService {
     
    @Override
     public UserDto updateVerifyUser(String userId, UserDto userDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         user.setIsActive(userDto.getIsActive());
         user.setEmailVerify(userDto.getEmailVerify());
         User updatedUser = userRepository.save(user);
@@ -99,7 +101,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public void deleteUser(String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         userRepository.delete(user);
     }
     

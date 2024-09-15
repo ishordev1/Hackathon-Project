@@ -54,7 +54,7 @@ public class TouristServiceImp implements TouristService {
     @Override
     public TouristDto getTouristById(String id) {
         Tourist tourist = touristRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tourist not found with id: " + id));
         return modelMapper.map(tourist, TouristDto.class);
     }
 
@@ -69,7 +69,7 @@ public class TouristServiceImp implements TouristService {
     @Override
     public TouristDto updateTourist(String id, TouristDto touristDto) {
         Tourist existingTourist = touristRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tourist not found with id: " + id));
 
         existingTourist.setName(touristDto.getName());
        
@@ -86,7 +86,7 @@ public class TouristServiceImp implements TouristService {
     @Override
     public void deleteTourist(String id) {
         Tourist tourist = touristRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Tourist not found with id: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Tourist not found with id: " + id));
         touristRepository.delete(tourist);
     }
     

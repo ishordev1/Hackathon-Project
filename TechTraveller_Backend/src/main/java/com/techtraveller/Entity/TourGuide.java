@@ -26,6 +26,7 @@ public class TourGuide {
     private String phoneNumber;
     private String gender;
     private String address;
+    private String city;
     
     @Enumerated(EnumType.STRING)
     private IdProof idProof;
@@ -51,17 +52,16 @@ public class TourGuide {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "user_id", nullable = false)
     private User user; 
-   
+ 
     
-//    @OneToMany(mappedBy = "tourGuide",cascade = CascadeType.ALL )
-//    private List<BookTourGuide> bookings;
 
-    @OneToMany(cascade = CascadeType.REMOVE,orphanRemoval = true)
+    @OneToMany(mappedBy = "tourGuide",cascade = CascadeType.ALL,orphanRemoval = true)
     @JsonManagedReference("tour_Guide")
     private List<TourPackage> tourPackages;
     
-    
+//    
     @OneToMany(mappedBy = "tourGuide", cascade = CascadeType.ALL)
+    @JsonManagedReference("tourist_guide_book")
 	private List<BookTourGuidePackage> bookTourGuidePackage;
      
     public enum AvailabilityStatus {

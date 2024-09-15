@@ -17,7 +17,7 @@ public class UserDto {
     private String userId;
     private String email;
     private Role role;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+
     private String password; 
     private String emailToken;
     private Boolean emailVerify;

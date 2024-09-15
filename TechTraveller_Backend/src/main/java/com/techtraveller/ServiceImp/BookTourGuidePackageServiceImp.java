@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,39 +41,35 @@ public class BookTourGuidePackageServiceImp implements BookTourGuidePackageServi
 
 	@Autowired
 	private ModelMapper modelMapper;
-	 @Override
-	    public BookTourGuidePackageDto createBookTourGuidePackage(BookTourGuidePackageDto packageDto, String packageId,
-	                                                                String tourGuideId, String touristId) {
-	       
-	        BookTourGuidePackage bookTourGuidePackage = this.modelMapper.map(packageDto, BookTourGuidePackage.class);
 
-		 // Fetching entities from repositories
-	        TourPackage tourPackage = this.tourPackageRepository.findById(packageId)
-	                .orElseThrow(() -> new ResourceNotFoundException("Tour package not found"));
-	        TourGuide tourGuide = this.tourGuideRepository.findById(tourGuideId)
-	                .orElseThrow(() -> new ResourceNotFoundException("Tour guide not found"));
-	        Tourist tourist = this.touristRepository.findById(touristId)
-	                .orElseThrow(() -> new ResourceNotFoundException("Tourist not found"));
+	@Override
+	public BookTourGuidePackageDto createBookTourGuidePackage(BookTourGuidePackageDto packageDto, String packageId,
+			String touristId) {
 
-	        // Setting details in the DTO
-	        bookTourGuidePackage.setPaymentStatus(PaymentStatus.PAYMENT_SUCCESSFUL);
-	        bookTourGuidePackage.setBookingDate(new Date());
-	        bookTourGuidePackage.setTourGuide(tourGuide);
-	        bookTourGuidePackage.setTourPackage(tourPackage);
-	        bookTourGuidePackage.setTouristsDto(List.of(tourist));
-	        
-	        
-	        
+		BookTourGuidePackage bookTourGuidePackage = this.modelMapper.map(packageDto, BookTourGuidePackage.class);
 
-	        
+		// Fetching entities from repositories
+		TourPackage tourPackage = this.tourPackageRepository.findById(packageId)
+				.orElseThrow(() -> new ResourceNotFoundException("Tour package not found"));
+		TourGuide tourGuide = this.tourGuideRepository.findById(tourPackage.getTourGuide().getId())
+				.orElseThrow(() -> new ResourceNotFoundException("Tour guide not found"));
+		Tourist tourist = this.touristRepository.findById(touristId)
+				.orElseThrow(() -> new ResourceNotFoundException("Tourist not found"));
 
-	        // Mapping DTO to Entity and saving it
-	  
-	        BookTourGuidePackage savedPackage = this.bookTourGuidePackageRepository.save(bookTourGuidePackage);
+		// Setting details in the DTO
+		bookTourGuidePackage.setPaymentStatus(PaymentStatus.PAYMENT_SUCCESSFUL);
+		bookTourGuidePackage.setBookingDate(new Date());
+		bookTourGuidePackage.setTourGuide(tourGuide);
+		bookTourGuidePackage.setTourPackage(tourPackage);
 
+		List<Tourist> list = new ArrayList<>();
+		list.add(tourist);
+		bookTourGuidePackage.setTourists(list);
 
-	        return this.modelMapper.map(savedPackage, BookTourGuidePackageDto.class);
-	    }
+		BookTourGuidePackage savedPackage = this.bookTourGuidePackageRepository.save(bookTourGuidePackage);
+
+		return this.modelMapper.map(savedPackage, BookTourGuidePackageDto.class);
+	}
 
 //    @Override
 //    public BookTourGuidePackageDto updateBookTourGuidePackage(String packageId, BookTourGuidePackageDto packageDto) {
@@ -101,20 +98,20 @@ public class BookTourGuidePackageServiceImp implements BookTourGuidePackageServi
 //        bookTourGuidePackageRepository.deleteById(packageId);
 //    }
 //
-//    @Override
-//    public BookTourGuidePackageDto getBookTourGuidePackageById(String packageId) {
-//        BookTourGuidePackage bookTourGuidePackage = bookTourGuidePackageRepository.findById(packageId)
-//                .orElseThrow(() -> new ResourceNotFoundException("Book Tour Guide Package not found"));
-//        return modelMapper.map(bookTourGuidePackage, BookTourGuidePackageDto.class);
-//    }
-//
-//    @Override
-//    public List<BookTourGuidePackageDto> getAllBookTourGuidePackages() {
-//        List<BookTourGuidePackage> packages = bookTourGuidePackageRepository.findAll();
-//        return packages.stream()
-//                .map(package.ge -> modelMapper.map(package, BookTourGuidePackageDto.class))
-//                .collect(Collectors.toList());
-//    }
+    @Override
+    public List<BookTourGuidePackageDto> getBookTourGuidePackageByPackageId(String packageId) {
+        List<BookTourGuidePackage> list = bookTourGuidePackageRepository.findByTourPackageTourPackageId(packageId);
+               
+        return  list.stream().map(pack-> this.modelMapper.map(pack, BookTourGuidePackageDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<BookTourGuidePackageDto> getAllBookTourGuidePackages() {
+        List<BookTourGuidePackage> packages = bookTourGuidePackageRepository.findAll();
+        return packages.stream()
+              .map(packag -> this.modelMapper.map(packag, BookTourGuidePackageDto.class))
+              .collect(Collectors.toList());
+        		}
 //
 //    @Override
 //    public List<BookTourGuidePackageDto> getPackagesByTourGuideId(String tourGuideId) {
@@ -131,4 +128,29 @@ public class BookTourGuidePackageServiceImp implements BookTourGuidePackageServi
 //                .map(package -> modelMapper.map(package, BookTourGuidePackageDto.class))
 //                .collect(Collectors.toList());
 //    }
+
+    @Override
+    public boolean cancelBookTourGuidePackage(String packageId, String touristId) {
+        BookTourGuidePackage bookedPackage = bookTourGuidePackageRepository.findById(packageId)
+                .orElseThrow(() -> new ResourceNotFoundException("Book Tour Guide Package not found"));
+
+        Tourist tourist = touristRepository.findById(touristId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tourist not found"));
+
+        if (!bookedPackage.getTourists().contains(tourist)) {
+            throw new IllegalStateException("Tourist does not have this package booked.");
+        }
+
+        bookedPackage.getTourists().remove(tourist);
+
+        if (bookedPackage.getTourists().isEmpty()) {
+            bookTourGuidePackageRepository.delete(bookedPackage);
+            return true;
+        } else {
+            bookTourGuidePackageRepository.save(bookedPackage);
+            return false;
+        }
+    }
+
+
 }

@@ -9,9 +9,9 @@ import lombok.Setter;
 
 import java.util.List;
 
-
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "tourists")
@@ -35,17 +35,19 @@ public class Tourist {
     private String email;
 
     private String gender;
-
     private String address;
-
     private String nationality;
 
-//    @OneToMany(mappedBy = "tourist", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<BookTourGuide> bookings;
     
     
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "bookingTourGuidePackage_id")
-	private BookTourGuidePackage bookingTourGuidePackage;
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "touristBookedBackages",
+        joinColumns = @JoinColumn(name = "tourist_id", referencedColumnName = "id"),
+        inverseJoinColumns = @JoinColumn(name = "book_package_id", 
+        referencedColumnName = "bookingPackageId")
+    )
+
+    private List<BookTourGuidePackage> bookedPackages;
 }
 

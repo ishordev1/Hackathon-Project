@@ -28,7 +28,7 @@ public class AppConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(
-				authorize -> authorize.requestMatchers("/api/**")
+				authorize -> authorize.requestMatchers("/cat/**")
 				.authenticated().anyRequest().permitAll())
 				.addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
 				.sessionManagement(management->management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

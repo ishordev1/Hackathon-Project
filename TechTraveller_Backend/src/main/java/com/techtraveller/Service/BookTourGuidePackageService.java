@@ -11,17 +11,20 @@ public interface BookTourGuidePackageService {
 	
 	
 	
-	public BookTourGuidePackageDto createBookTourGuidePackage(BookTourGuidePackageDto packageDto, String packageId, String tourGuideId, String touristId);
+	public BookTourGuidePackageDto createBookTourGuidePackage(BookTourGuidePackageDto packageDto, String packageId, String touristId);
 
 //    BookTourGuidePackageDto updateBookTourGuidePackage(BookTourGuidePackageDto packageDto,String bookpackageId, String packageId, String tourGuideId, String touristId);
 //
 //    void deleteBookTourGuidePackage(String packageId);
 //
-//    BookTourGuidePackageDto getBookTourGuidePackageById(String packageId);
+   List<BookTourGuidePackageDto> getBookTourGuidePackageByPackageId(String packageId);
 //
-//    List<BookTourGuidePackageDto> getAllBookTourGuidePackages();
+    List<BookTourGuidePackageDto> getAllBookTourGuidePackages();
 //
 //    List<BookTourGuidePackageDto> getPackagesByTourGuideId(String tourGuideId);
 //
 //    List<BookTourGuidePackageDto> getPackagesByTourPackageId(String tourPackageId);
+	
+	
+	 boolean cancelBookTourGuidePackage(String packageId, String touristId);
 }

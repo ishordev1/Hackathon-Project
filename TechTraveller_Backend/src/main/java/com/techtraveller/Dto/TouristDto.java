@@ -29,6 +29,6 @@ public class TouristDto {
     private String gender;
     private String address;
     private String nationality;
-    private BookTourGuidePackageDto bookingTourGuidePackageDto;
+    private List<BookTourGuidePackageDto> bookedPackages;
 //    private List<BookTourGuideDto> bookings;
 }

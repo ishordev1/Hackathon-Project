@@ -26,11 +26,11 @@ public class BookTourGuidePackageDto {
 	private PaymentStatus paymentStatus;
 	private Integer seatCount;
 	private Long totalAmount;
-	private TourGuide tourGuide;
+	private String tourGuideId;
 	
-	private List<TouristDto> touristsDto;
-	private TourPackage tourPackage;
-	
+	private List<TouristDto> tourists;
+	private TourPackageDto tourPackage;
+	 
 	
 	
 	

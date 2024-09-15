@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 //import com.techtraveller.Dto.BookTourGuideDto;
 //import com.techtraveller.Entity.BookTourGuide.BookingStatus;
 
@@ -18,8 +22,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,12 +38,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@Table(name="bookpackage")
 public class BookTourGuidePackage {
 	@Id
 	@GeneratedValue(strategy = GenerationType.UUID)
 	
 	private String bookingPackageId;
-
 //	@Column(name = "booking_date", nullable = false)
 	private Date bookingDate;
 
@@ -52,16 +58,16 @@ public class BookTourGuidePackage {
 	private Long totalAmount;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tour_Guide_Id")
+	@JoinColumn(name = "tourGuide_id")
+	@JsonBackReference("tourist_guide_book")
 	private TourGuide tourGuide;
-
-	@OneToMany(mappedBy = "bookingTourGuidePackage", cascade = CascadeType.ALL)
-	private List<Tourist> tourists=new ArrayList<>();
-
 	
-
+	  @ManyToMany(mappedBy = "bookedPackages", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	  private List<Tourist> tourists;
+	  
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tourPackage_id")
+	@JsonBackReference("tour_package")
 	private TourPackage tourPackage;
 	
 	 public enum AvailabilityStatus {

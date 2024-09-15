@@ -6,6 +6,8 @@ import com.techtraveller.Dto.TourPackageDto;
 import com.techtraveller.Service.BookTourGuidePackageService;
 import com.techtraveller.Service.TourPackageService;
 import lombok.RequiredArgsConstructor;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +24,10 @@ public class TourPackageController {
     
     @Autowired
     private BookTourGuidePackageService bookTourGuidePackageService;
+    
+  
 
-    @PostMapping("/{tourGuideId}")
+    @PostMapping("/tourguide/{tourGuideId}")
     public ResponseEntity<TourPackageDto> createTourPackage(
             @PathVariable("tourGuideId") String tourGuideId,
             @RequestBody TourPackageDto tourPackageDto) {
@@ -31,7 +35,7 @@ public class TourPackageController {
         return new ResponseEntity<>(createdTourPackage, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{tourGuideId}/{id}")
+    @PutMapping("/tourguide/{tourGuideId}/{id}")
     public ResponseEntity<TourPackageDto> updateTourPackage(
             @PathVariable("tourGuideId") String tourGuideId,
             @PathVariable("id") String id,
@@ -40,7 +44,7 @@ public class TourPackageController {
         return new ResponseEntity<>(updatedTourPackage, HttpStatus.OK);
     }
 
-    @GetMapping("/{tourGuideId}/{id}")
+    @GetMapping("/{id}/tourguide/{tourGuideId}")
     public ResponseEntity<TourPackageDto> getTourPackageById(
             @PathVariable("tourGuideId") String tourGuideId,
             @PathVariable("id") String id) {
@@ -54,14 +58,14 @@ public class TourPackageController {
         return new ResponseEntity<>(tourPackages, HttpStatus.OK);
     }
 
-    @GetMapping("/tour-guide/{tourGuideId}")
+    @GetMapping("/tourguide/{tourGuideId}")
     public ResponseEntity<List<TourPackageDto>> getAllTourPackagesByTourGuideId(
             @PathVariable("tourGuideId") String tourGuideId) {
         List<TourPackageDto> tourPackages = tourPackageService.getAllTourPackagesByTourGuideId(tourGuideId);
         return new ResponseEntity<>(tourPackages, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{tourGuideId}/{id}")
+    @DeleteMapping("/{id}/tourguide/{tourGuideId}")
     public ResponseEntity<ApiResponse> deleteTourPackage(
             @PathVariable("tourGuideId") String tourGuideId,
             @PathVariable("id") String id) {
@@ -71,16 +75,50 @@ public class TourPackageController {
     }
     
     
+    //booking package
     
     
     
+    @PostMapping("/{packageId}/bookPackage/tourist/{touristId}")
+    public ResponseEntity<BookTourGuidePackageDto> bookTourPackage(
+            @PathVariable("touristId") String touristId,
+            @PathVariable("packageId") String packageId,
+            @RequestBody BookTourGuidePackageDto bookPackage) {
+BookTourGuidePackageDto bookTourGuidePackage = this.bookTourGuidePackageService.createBookTourGuidePackage(bookPackage, packageId, touristId);
+    	
+return new ResponseEntity<>(bookTourGuidePackage, HttpStatus.CREATED);
+    }
     
-//    @PostMapping("/bookPackage/{}")
-//    public ResponseEntity<TourPackageDto> bookTourPackage(
-//            @PathVariable("tourGuideId") String tourGuideId,
-//            @RequestBody BookTourGuidePackageDto bookPackage) {
-//        TourPackageDto createdTourPackage = tourPackageService.createTourPackageByTourGuideId(tourGuideId, tourPackageDto);
-//        return new ResponseEntity<>(createdTourPackage, HttpStatus.CREATED);
-//    }
+    @GetMapping("/bookedpackage")
+    public ResponseEntity<List<BookTourGuidePackageDto>> getAllBookedPackage(){
+    	List<BookTourGuidePackageDto> allBookTourGuidePackages = this.bookTourGuidePackageService.getAllBookTourGuidePackages();
+    	return new ResponseEntity<>(allBookTourGuidePackages,HttpStatus.OK);
+    }
+    
+    @GetMapping("/bookedpackage/{packageId}")
+    public ResponseEntity<List<BookTourGuidePackageDto>> getAllBookedPackage(@PathVariable String packageId){
+    	List<BookTourGuidePackageDto> allBookTourGuidePackages = this.bookTourGuidePackageService.getBookTourGuidePackageByPackageId(packageId);
+    	return new ResponseEntity<>(allBookTourGuidePackages,HttpStatus.OK);
+    }
+    
+    @GetMapping("/{packageId}/cancelbookedpackagebytourist/{touristId}")
+    public ResponseEntity<ApiResponse> cancelpackage
+    (@PathVariable String packageId, @PathVariable String touristId){
+    	boolean check = this.bookTourGuidePackageService.cancelBookTourGuidePackage(packageId, touristId);
+    ApiResponse apiResponse=null;
+    if(check) {
+    	ApiResponse.builder().message("Your tourpackage are cancel successfully")
+    	.success(true)
+    	.Status(HttpStatus.OK).build();
+    }
+    else {
+    	ApiResponse.builder().message("sorry your package is not cancel")
+    	.success(true)
+    	.Status(HttpStatus.OK).build();
+    }
+    
+    return new ResponseEntity<>(ApiResponse,HttpStatus.OK);
+    
+    }
     
 }
